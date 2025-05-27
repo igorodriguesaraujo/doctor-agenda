@@ -1,4 +1,4 @@
-## Projeto Saas para clínicas
+## Projeto Saas de Agendamentos para Clínicas
 
 Projeto desenvolvido durante o bootcamp FSW, um dashboard para clínica médica, com gerenciamento de pacientes, medicos e agendamentos.
 
