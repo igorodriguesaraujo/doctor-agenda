@@ -31,10 +31,10 @@ export const userTableRelations = relations(usersTable, ({ many }) => ({
 export const usersToClinicsTable = pgTable('users_to_clinics', {
   clinicId: uuid('clinic_id')
     .notNull()
-    .references(() => clinicsTable.id),
+    .references(() => clinicsTable.id, { onDelete: 'cascade' }),
   userId: text('user_id')
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
 })
 
 export const usersToClinicsTableRelations = relations(
