@@ -35,7 +35,7 @@ export default async function SignIn() {
 
         <div className="text-center my-4 text-sm">
           <span className="text-gray-500">
-            Pensando em fazer a gestão da sua clínica,
+            Pensando em fazer a gestão da sua clínica,{' '}
           </span>
           <Link href='/sign-up' className="text-doc-primary font-bold underline">
             Clique aqui
