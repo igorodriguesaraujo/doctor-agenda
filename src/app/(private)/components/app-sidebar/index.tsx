@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Calendar1Icon,
   Gem,
@@ -19,8 +21,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-import { SidebarProfile } from "./profile"
 import { Brand } from "./brand"
+import { SidebarProfile } from "./profile"
+import { usePathname } from "next/navigation"
 
 // Menu items.
 const items = [
@@ -48,6 +51,9 @@ const items = [
 
 
 export function AppSidebar() {
+
+  const pathname = usePathname();
+
   return (
     <Sidebar>
       <Brand />
@@ -56,12 +62,12 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Menu principal</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-3">
+            <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url} className="">
-                      <item.icon />
+                  <SidebarMenuButton asChild isActive={pathname === item.url}>
+                    <Link href={item.url} className="h-12">
+                      <item.icon className="!size-5" />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -77,8 +83,8 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/planos">
-                    <Gem />
+                  <Link href="/planos" className="h-12">
+                    <Gem className="!size-5" />
                     <span>Planos</span>
                   </Link>
                 </SidebarMenuButton>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Toaster } from "sonner";
 
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/app/(private)/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function PrivateLayout({ children }: { children: React.ReactNode }) {

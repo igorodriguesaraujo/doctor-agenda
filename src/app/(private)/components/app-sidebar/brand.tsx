@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SidebarHeader } from "../ui/sidebar";
+import { SidebarHeader } from "../../../../components/ui/sidebar";
 import LogoDoctor from '@/assets/logo.svg';
 
 export function Brand() {
