@@ -101,7 +101,7 @@ export default function FormSignIn() {
           disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting
             ? <Loader2 className="w-4 h-4 animate-spin" />
-            : 'Acessar'
+            : 'Acessar conta'
           }
         </Button>
 
