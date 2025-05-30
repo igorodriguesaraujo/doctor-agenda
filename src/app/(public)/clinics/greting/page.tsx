@@ -6,7 +6,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BriefcaseMedical, Loader2, PartyPopper } from "lucide-react";
+import { Hospital, Loader2, PartyPopper } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,8 @@ import { createClinic } from "@/actions/clinic/create-clinic";
 
 import LogoDoc from '@/assets/logo.svg'
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   name: z.string().min(1, { message: 'Campo obrigatório' }),
@@ -24,7 +26,14 @@ const schema = z.object({
 
 type FormDataCreateClinic = z.infer<typeof schema>
 
-export default function WelcomeFirstClinic() {
+export default function Greting() {
+  const router = useRouter();
+
+  const session = authClient.useSession();
+
+  if (!session.data?.user.email) {
+    router.push('/sign-in')
+  }
 
   const form = useForm<FormDataCreateClinic>({
     resolver: zodResolver(schema),
@@ -42,6 +51,16 @@ export default function WelcomeFirstClinic() {
       if (isRedirectError(error)) return;
       toast.error('Houver um error: ' + error)
     }
+  }
+
+  async function handleLogout() {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push('/sign-in');
+        }
+      }
+    })
   }
 
   return (
@@ -92,9 +111,18 @@ export default function WelcomeFirstClinic() {
               {form.formState.isSubmitting
                 ? <Loader2 className="w-4 h-4 animate-spin" />
                 : (<>
-                  <BriefcaseMedical />
+                  <Hospital size={24} className="!w-6 !h-6" />
                   Criar sua primeira Clínica
                 </>)}
+            </Button>
+
+            <Button
+              type="button"
+              variant="link"
+              className="text-gray-500 font-normal"
+              onClick={handleLogout}
+            >
+              Voltar para acessar minha conta
             </Button>
           </form>
         </Form>

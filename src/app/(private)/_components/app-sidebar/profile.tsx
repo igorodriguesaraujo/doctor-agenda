@@ -13,8 +13,6 @@ export function SidebarProfile() {
   const router = useRouter();
   const session = authClient.useSession()
 
-
-
   async function handleLogout() {
     await authClient.signOut({
       fetchOptions: {
@@ -37,7 +35,7 @@ export function SidebarProfile() {
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <strong className="text-gray-600 font-bold">{session.data?.user.clinic.name}</strong>
+                <strong className="text-gray-600 font-bold">{session.data?.user?.clinic?.name}</strong>
                 <span className="text-xs text-gray-400">{session.data?.user.email}</span>
               </div>
             </SidebarMenuItem>

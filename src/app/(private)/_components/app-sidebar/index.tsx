@@ -34,17 +34,17 @@ const items = [
   },
   {
     title: "Agendamentos",
-    url: "/agendamentos",
+    url: "/appoiments",
     icon: Calendar1Icon,
   },
   {
     title: "Médicos",
-    url: "/medicos",
+    url: "/doctors",
     icon: Stethoscope,
   },
   {
     title: "Pacientes",
-    url: "/pacientes",
+    url: "/patients",
     icon: Users2,
   }
 ]
@@ -83,7 +83,7 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/planos" className="h-12">
+                  <Link href="/subscribe" className="h-12">
                     <Gem className="!size-5" />
                     <span>Planos</span>
                   </Link>
