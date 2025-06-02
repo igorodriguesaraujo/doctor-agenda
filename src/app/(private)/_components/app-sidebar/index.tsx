@@ -51,7 +51,6 @@ const items = [
 
 
 export function AppSidebar() {
-
   const pathname = usePathname();
 
   return (
@@ -82,7 +81,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={pathname === 'subscribe'}>
                   <Link href="/subscribe" className="h-12">
                     <Gem className="!size-5" />
                     <span>Planos</span>
