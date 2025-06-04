@@ -1,5 +1,14 @@
 import { relations } from "drizzle-orm";
-import { pgTable, uuid, text, integer, timestamp, pgEnum, boolean } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  integer,
+  timestamp,
+  pgEnum,
+  boolean,
+  time
+} from "drizzle-orm/pg-core";
 
 // Create User Table
 export const usersTable = pgTable("users", {
@@ -58,11 +67,11 @@ export const doctorsTable = pgTable("doctors", {
     .notNull()
     .references(() => clinicsTable.id, { onDelete: 'cascade' }),
   name: text("name").notNull(),
-  avatarImageURL: text("avatar_image_url").notNull(),
+  avatarImageURL: text("avatar_image_url"),
   availableFromWeekDay: integer('available_from_week_day').notNull(),
   availableToWeekDay: integer('available_to_week_day').notNull(),
-  availableFromTime: integer('available_from_time').notNull(),
-  availableToTime: integer('available_to_time').notNull(),
+  availableFromTime: time('available_from_time', { withTimezone: true }).notNull(),
+  availableToTime: time('available_to_time', { withTimezone: true }).notNull(),
   specialty: text('specialty').notNull(),
   appointmentPriceInCents: integer('appointment_price_in_cents').notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
