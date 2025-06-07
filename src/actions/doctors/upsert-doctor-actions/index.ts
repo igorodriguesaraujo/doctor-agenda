@@ -9,6 +9,7 @@ import { db } from "@/lib/drizzle";
 import { upsertDoctorSchema } from "./schema";
 import { doctorsTable } from "@/database/schema";
 import { actionClient } from "@/lib/next-safe-action";
+import { revalidatePath } from 'next/cache';
 
 dayjs.extend(utc);
 
@@ -43,7 +44,7 @@ export const upsertDoctorAction = actionClient
 
     const timeTo = availableToTimeUTC.format("HH:mm:ss");
     const timeFrom = availableFromTimeUTC.format("HH:mm:ss");
-    const appointmentPriceInCents = parsedInput.appointmentPrice * 100;
+    const appointmentPriceInCents = parsedInput.appointmentPrice;
 
     await db
       .insert(doctorsTable)
@@ -62,5 +63,6 @@ export const upsertDoctorAction = actionClient
           availableToTime: timeTo,
           appointmentPriceInCents: appointmentPriceInCents,
         }
-      })
+      });
+    revalidatePath('/doctors')
   })
