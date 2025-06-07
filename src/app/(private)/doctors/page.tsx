@@ -1,7 +1,19 @@
-import { PageBreadCrumb, PageContainer, PageHeader, PageHeaderDescription, PageHeaderTitle } from "../_components/page-container"
-import { auth } from "@/lib/auth"
+import { eq } from "drizzle-orm"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
+
+import { auth } from "@/lib/auth"
+import { db } from "@/lib/drizzle"
+import { doctorsTable } from "@/database/schema"
+
+import {
+  PageBreadCrumb,
+  PageContainer,
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderTitle
+} from "../_components/page-container"
+import { CardDoctor } from "./_components/card-doctor"
 import { ButtonCreateDoctor } from "./_components/button-create-doctor"
 
 export default async function Doctors() {
@@ -17,6 +29,10 @@ export default async function Doctors() {
     redirect('/clinics/greting');
   }
 
+  const doctors = await db.query.doctorsTable.findMany({
+    where: eq(doctorsTable.clinicId, session.user.clinic.id)
+  })
+
   return (
     <>
       <PageContainer>
@@ -30,11 +46,12 @@ export default async function Doctors() {
               Faça o gerenciamento dos médicos da sua clínica.
             </PageHeaderDescription>
           </div>
-
           <ButtonCreateDoctor />
-
         </PageHeader>
-        <h2>Página de médicos</h2>
+
+        <div className="grid md:grid-cols-2 xl:grid-cols-4  gap-4">
+          {doctors?.map((doctor) => <CardDoctor key={doctor.id} doctor={doctor} />)}
+        </div>
       </PageContainer>
     </>
   )
