@@ -7,7 +7,6 @@ import FormSignIn from "./_components/form-sign-in";
 
 import { auth } from "@/lib/auth";
 
-import LogoDoc from '@/assets/logo.svg'
 import { Button } from "@/components/ui/button";
 
 export default async function SignIn() {
@@ -25,7 +24,7 @@ export default async function SignIn() {
         <div
           className="flex flex-col items-center justify-center text-center my-8 gap-4">
           <Image
-            src={LogoDoc}
+            src="/logo.svg"
             width={150}
             height={50}
             alt="Logo Doc" />

@@ -24,6 +24,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body
         className={`${poppins.variable} antialiased`}
+        suppressHydrationWarning
       >
         {children}
         <Toaster richColors theme="light" />
