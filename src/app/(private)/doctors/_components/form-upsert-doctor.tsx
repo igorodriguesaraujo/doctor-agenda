@@ -84,8 +84,6 @@ export function FormUpSertDoctor({ onSuccess, doctor }: FormUpSertDoctorProps) {
     });
 
   async function onSubmit(data: FormDataDoctor) {
-    await new Promise(resolve => setTimeout(resolve, 2000))
-
     execute({
       ...data,
       id: doctor?.id,
