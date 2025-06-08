@@ -22,17 +22,14 @@ export const deleteDoctorAction = actionClient
       throw new Error('Usuário não autozizado.')
     }
 
-    // Recuperar o medico 
     const doctor = await db.query.doctorsTable.findFirst({
       where: eq(doctorsTable.id, parsedInput.id),
     })
 
-    // Se o médico não existir
     if (!doctor) {
       throw new Error('Médico não encotrado.')
     }
 
-    // Verificar se a clinica pertence ao usuário logado
     if (session.user.clinic?.id !== doctor.clinicId) {
       throw new Error('Clinica não autozizado.')
     }
