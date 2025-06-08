@@ -5,6 +5,8 @@ import {
   Clock,
   DollarSign,
   Eye,
+  Loader2,
+  Trash2,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -26,6 +28,11 @@ import { formatCurrency } from "@/utils/formatCurrency"
 import { formatWeekDay } from "@/utils/formatWeekDay"
 import { formatTimeLocalUTC } from "@/utils/formatTimeLocalUTC"
 import React from "react"
+import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog"
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel } from "@/components/ui/alert-dialog"
+import { deleteDoctorAction } from "@/actions/doctors/delete-doctor-actions"
+import { useAction } from "next-safe-action/hooks"
+import { toast } from "sonner"
 
 interface CardDoctorProps {
   doctor: typeof doctorsTable.$inferSelect;
@@ -36,9 +43,20 @@ export function CardDoctor({ doctor }: CardDoctorProps) {
   const to = formatTimeLocalUTC(doctor.availableToTime);
 
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpenDeleteDoctor, setIsOpenDeleteDoctor] = React.useState(false);
+
+
+  const { execute, isPending } = useAction(deleteDoctorAction, {
+    onSuccess: () => {
+      toast.success('Médico deletado com sucesso!')
+    },
+    onError: () => {
+      toast.error('Error ao deletar o médico!')
+    }
+  })
 
   return (
-    <Card className="p-4 shadow-none border border-doc-primary/10">
+    <Card className="p-4 shadow-none border border-doc-primary/10 justify-between">
       <CardHeader className="p-0">
         <div className="flex items-center gap-4">
           <Avatar className="size-12">
@@ -90,7 +108,7 @@ export function CardDoctor({ doctor }: CardDoctorProps) {
 
       <Separator />
 
-      <CardFooter className="px-0">
+      <CardFooter className="flex flex-wrap gap-4 px-0">
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button
@@ -108,7 +126,36 @@ export function CardDoctor({ doctor }: CardDoctorProps) {
           }}
             onSuccess={() => setIsOpen(false)} />
         </Dialog>
+
+        <AlertDialog open={isOpenDeleteDoctor} onOpenChange={setIsOpenDeleteDoctor} >
+          <AlertDialogTrigger asChild>
+            <Button className="w-full" variant='outline'>
+              <Trash2 />
+              Remover médico
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Deseja remover o médico?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Está ação não pode ser revertida, Ela removerá permanentimente o médico e todo o seu histórico.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <Button
+                disabled={isPending}
+                variant='primary'
+                onClick={async () => {
+                  await execute({ id: doctor.id })
+                  setIsOpenDeleteDoctor(false)
+                }}>
+                {isPending && <Loader2 className="animate-spin me-1" />} Remover
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardFooter>
-    </Card>
+    </Card >
   )
 }
