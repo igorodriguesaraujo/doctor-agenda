@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Calendar,
   Clock,
@@ -22,13 +24,19 @@ import { FormUpSertDoctor } from "./form-upsert-doctor"
 import { doctorsTable } from "@/database/schema"
 import { formatCurrency } from "@/utils/formatCurrency"
 import { formatWeekDay } from "@/utils/formatWeekDay"
-import { formatTimeLocalUTC } from "@/utils/formatTimeUTC"
+import { formatTimeLocalUTC } from "@/utils/formatTimeLocalUTC"
+import React from "react"
 
 interface CardDoctorProps {
   doctor: typeof doctorsTable.$inferSelect;
 }
 
 export function CardDoctor({ doctor }: CardDoctorProps) {
+  const from = formatTimeLocalUTC(doctor.availableFromTime);
+  const to = formatTimeLocalUTC(doctor.availableToTime);
+
+  const [isOpen, setIsOpen] = React.useState(false);
+
   return (
     <Card className="p-4 shadow-none border border-doc-primary/10">
       <CardHeader className="p-0">
@@ -83,7 +91,7 @@ export function CardDoctor({ doctor }: CardDoctorProps) {
       <Separator />
 
       <CardFooter className="px-0">
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button
               className="w-full"
@@ -92,7 +100,13 @@ export function CardDoctor({ doctor }: CardDoctorProps) {
               Ver detalhes
             </Button>
           </DialogTrigger>
-          <FormUpSertDoctor />
+          <FormUpSertDoctor doctor={{
+            ...doctor,
+            id: doctor.id,
+            availableFromTime: from.format('HH:mm:ss'),
+            availableToTime: to.format('HH:mm:ss')
+          }}
+            onSuccess={() => setIsOpen(false)} />
         </Dialog>
       </CardFooter>
     </Card>

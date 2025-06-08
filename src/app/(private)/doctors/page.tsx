@@ -49,8 +49,12 @@ export default async function Doctors() {
           <ButtonCreateDoctor />
         </PageHeader>
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-4  gap-4">
-          {doctors?.map((doctor) => <CardDoctor key={doctor.id} doctor={doctor} />)}
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+          {doctors?.map((doctor) => (
+            <CardDoctor
+              key={doctor.id}
+              doctor={doctor} />
+          ))}
         </div>
       </PageContainer>
     </>
