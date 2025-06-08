@@ -13,7 +13,6 @@ import { schema } from "./schema";
 export const deleteDoctorAction = actionClient
   .schema(schema)
   .action(async ({ parsedInput }) => {
-    // Verificar se o usuário está logado
     const session = await auth.api.getSession({
       headers: await headers()
     })
