@@ -11,6 +11,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { Dialog } from "@radix-ui/react-dialog";
+import { FormUpsertPatient } from "../form-upsert-patient";
 
 type TablePatients = typeof patientsTable.$inferSelect;
 
@@ -43,21 +45,25 @@ export const columns: ColumnDef<TablePatients>[] = [
     id: 'action',
     cell: () => {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <MoreVerticalIcon className="w-4 h-4 cursor-pointer" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
-              <Edit />
-              Editar
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Trash2 />
-              Excluir
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Dialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <MoreVerticalIcon className="w-4 h-4 cursor-pointer" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                <Edit />
+                Editar
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Trash2 />
+                Excluir
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <FormUpsertPatient />
+        </Dialog>
       )
     }
   }

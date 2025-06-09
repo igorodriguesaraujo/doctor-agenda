@@ -1,6 +1,8 @@
 'use client'
 
 import { z } from "zod";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -12,14 +14,20 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { PatternFormat } from "react-number-format";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { DialogHeader, DialogContent, DialogTitle } from "@/components/ui/dialog";
+
 import { useAction } from "next-safe-action/hooks";
 import { upsertPatientAction } from "@/actions/patients/upsert-patient-action";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
 
 const schema = z.object({
   name: z.string().min(1, { message: 'Campo Obrigatório' }),
@@ -62,84 +70,92 @@ export function FormUpsertPatient({ onSuccess }: FormUpsertPatientProps) {
   }
 
   return (
-    <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage className="flex items-center gap-2" />
-            </FormItem>
-          )} />
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle className="text-xl font-bold">
+          Adicionar novo paciente
+        </DialogTitle>
+      </DialogHeader>
 
-        <FormField
-          name="email"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>E-mail</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage className="flex items-center gap-2" />
-            </FormItem>
-          )} />
-
-        <FormField
-          name="phone"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Telefone</FormLabel>
-              <FormControl>
-                <PatternFormat
-                  {...field}
-                  format="(##) #####-####"
-                  customInput={Input} />
-              </FormControl>
-              <FormMessage className="flex items-center gap-2" />
-            </FormItem>
-          )} />
-
-        <div className="flex items-center flex-wrap gap-4">
+      <Form {...form}>
+        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
+            name="name"
             control={form.control}
-            name="sex"
             render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Sexo</FormLabel>
-                <FormControl className="flex flex-col gap-3">
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value?.toString()}>
-                    <SelectTrigger className="w-full min-h-12">
-                      <SelectValue placeholder="Selecione o sexo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="female">Feminino</SelectItem>
-                      <SelectItem value="male">Masculino</SelectItem>
-                    </SelectContent>
-                  </Select>
+              <FormItem>
+                <FormLabel>Nome</FormLabel>
+                <FormControl>
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage className="flex items-center gap-2" />
               </FormItem>
             )} />
-        </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={isPending}
-          variant="primary">
-          {isPending && <Loader2 className="animate-spin me-2" />}
-          Criar paciente
-        </Button>
-      </form>
-    </Form>
+          <FormField
+            name="email"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>E-mail</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage className="flex items-center gap-2" />
+              </FormItem>
+            )} />
+
+          <FormField
+            name="phone"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Telefone</FormLabel>
+                <FormControl>
+                  <PatternFormat
+                    {...field}
+                    format="(##) #####-####"
+                    customInput={Input} />
+                </FormControl>
+                <FormMessage className="flex items-center gap-2" />
+              </FormItem>
+            )} />
+
+          <div className="flex items-center flex-wrap gap-4">
+            <FormField
+              control={form.control}
+              name="sex"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Sexo</FormLabel>
+                  <FormControl className="flex flex-col gap-3">
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value?.toString()}>
+                      <SelectTrigger className="w-full min-h-12">
+                        <SelectValue placeholder="Selecione o sexo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="female">Feminino</SelectItem>
+                        <SelectItem value="male">Masculino</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="flex items-center gap-2" />
+                </FormItem>
+              )} />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isPending}
+            variant="primary">
+            {isPending && <Loader2 className="animate-spin me-2" />}
+            Criar paciente
+          </Button>
+        </form>
+      </Form>
+    </DialogContent>
   )
 }
