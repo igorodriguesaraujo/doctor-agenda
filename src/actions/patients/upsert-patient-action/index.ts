@@ -33,6 +33,7 @@ export const upsertPatientAction = actionClient
     }
 
     await db.insert(patientsTable).values({
+      id: parsedInput.id,
       name: parsedInput.name,
       email: parsedInput.email,
       phoneNumber: parsedInput.phone,

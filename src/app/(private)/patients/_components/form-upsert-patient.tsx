@@ -1,6 +1,6 @@
 'use client'
-
 import { z } from "zod";
+import React from 'react';
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -26,34 +26,42 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DialogHeader, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
+import { patientsTable } from "@/database/schema";
 import { useAction } from "next-safe-action/hooks";
 import { upsertPatientAction } from "@/actions/patients/upsert-patient-action";
 
 const schema = z.object({
   name: z.string().min(1, { message: 'Campo Obrigatório' }),
   email: z.string().email('E-mail invalido').min(1, { message: 'Campo Obrigatório' }),
-  phone: z.string().min(1, { message: 'Campo Obrigatório' }),
+  phoneNumber: z.string().min(1, { message: 'Campo Obrigatório' }),
   sex: z.union([z.literal('female'), z.literal('male')])
 })
 
 type UpsertPatientSchema = z.infer<typeof schema>
 
 interface FormUpsertPatientProps {
+  patient?: typeof patientsTable.$inferSelect;
   onSuccess?: () => void;
 }
 
-export function FormUpsertPatient({ onSuccess }: FormUpsertPatientProps) {
+export function FormUpsertPatient({ onSuccess, patient }: FormUpsertPatientProps) {
   const form = useForm<UpsertPatientSchema>({
     mode: 'all',
     shouldUnregister: true,
     resolver: zodResolver(schema),
     defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      sex: undefined
+      name: patient?.name ?? '',
+      email: patient?.email ?? '',
+      phoneNumber: patient?.phoneNumber ?? '',
+      sex: patient?.sex ?? undefined
     }
   })
+
+  React.useEffect(() => {
+    if (onSuccess) {
+      form.reset(patient);
+    }
+  }, [onSuccess, form, patient]);
 
   const { execute, isPending } = useAction(upsertPatientAction, {
     onSuccess: () => {
@@ -66,14 +74,18 @@ export function FormUpsertPatient({ onSuccess }: FormUpsertPatientProps) {
   })
 
   async function onSubmit(data: UpsertPatientSchema) {
-    execute(data);
+    execute({
+      ...data,
+      phone: patient?.phoneNumber ?? '',
+      id: patient?.id
+    });
   }
 
   return (
     <DialogContent>
       <DialogHeader>
         <DialogTitle className="text-xl font-bold">
-          Adicionar novo paciente
+          {patient ? 'Atualizar paciente' : 'Adicionar novo paciente'}
         </DialogTitle>
       </DialogHeader>
 
@@ -106,7 +118,7 @@ export function FormUpsertPatient({ onSuccess }: FormUpsertPatientProps) {
             )} />
 
           <FormField
-            name="phone"
+            name="phoneNumber"
             control={form.control}
             render={({ field }) => (
               <FormItem>
@@ -152,7 +164,7 @@ export function FormUpsertPatient({ onSuccess }: FormUpsertPatientProps) {
             disabled={isPending}
             variant="primary">
             {isPending && <Loader2 className="animate-spin me-2" />}
-            Criar paciente
+            {patient ? 'Atualizar' : 'Criar paciente'}
           </Button>
         </form>
       </Form>
