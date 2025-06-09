@@ -305,7 +305,6 @@ export function FormUpSertDoctor({ onSuccess, doctor }: FormUpSertDoctorProps) {
               control={form.control}
               name="availableToTime"
               render={({ field }) => {
-                console.log('availableToTime value:', field.value);
                 return (
                   <FormItem className="flex-1">
                     <FormLabel>Até:</FormLabel>
