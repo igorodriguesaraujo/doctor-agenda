@@ -3,13 +3,14 @@
 import dayjs from 'dayjs'
 import utc from "dayjs/plugin/utc";
 import { headers } from "next/headers";
+import { revalidatePath } from 'next/cache';
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/drizzle";
-import { upsertDoctorSchema } from "./schema";
 import { doctorsTable } from "@/database/schema";
 import { actionClient } from "@/lib/next-safe-action";
-import { revalidatePath } from 'next/cache';
+
+import { upsertDoctorSchema } from "./schema";
 
 dayjs.extend(utc);
 
@@ -44,7 +45,6 @@ export const upsertDoctorAction = actionClient
 
     const timeTo = availableToTimeUTC.format("HH:mm:ss");
     const timeFrom = availableFromTimeUTC.format("HH:mm:ss");
-    const appointmentPriceInCents = parsedInput.appointmentPrice;
 
     await db
       .insert(doctorsTable)
@@ -53,7 +53,6 @@ export const upsertDoctorAction = actionClient
         availableToTime: timeTo,
         availableFromTime: timeFrom,
         clinicId: session.user.clinic.id,
-        appointmentPriceInCents: appointmentPriceInCents,
       })
       .onConflictDoUpdate({
         target: [doctorsTable.id],
@@ -61,7 +60,6 @@ export const upsertDoctorAction = actionClient
           ...parsedInput,
           availableFromTime: timeFrom,
           availableToTime: timeTo,
-          appointmentPriceInCents: appointmentPriceInCents,
         }
       });
     revalidatePath('/doctors')

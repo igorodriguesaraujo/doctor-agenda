@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 
@@ -30,7 +30,8 @@ export default async function Doctors() {
   }
 
   const doctors = await db.query.doctorsTable.findMany({
-    where: eq(doctorsTable.clinicId, session.user.clinic.id)
+    where: eq(doctorsTable.clinicId, session.user.clinic.id),
+    orderBy: [desc(doctorsTable.createdAt)]
   })
 
   return (

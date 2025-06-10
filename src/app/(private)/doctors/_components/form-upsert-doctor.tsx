@@ -41,6 +41,7 @@ import { Separator } from "@/components/ui/separator"
 import { doctorsTable } from "@/database/schema"
 import { FormDataDoctor, schemaDoctor } from "../_type"
 import { upsertDoctorAction } from "@/actions/doctors/upsert-doctor-actions"
+import React from 'react';
 
 interface FormUpSertDoctorProps {
   doctor?: typeof doctorsTable.$inferSelect;
@@ -58,7 +59,7 @@ export function FormUpSertDoctor({ onSuccess, doctor }: FormUpSertDoctorProps) {
     defaultValues: {
       name: doctor?.name ?? '',
       specialty: doctor?.specialty ?? '',
-      appointmentPrice: doctor?.appointmentPriceInCents
+      appointmentPriceInCents: doctor?.appointmentPriceInCents
         ? doctor?.appointmentPriceInCents / 100
         : 0,
       availableFromWeekDay: doctor?.availableFromWeekDay.toString() ?? '1',
@@ -83,13 +84,27 @@ export function FormUpSertDoctor({ onSuccess, doctor }: FormUpSertDoctorProps) {
       }
     });
 
+  React.useEffect(() => {
+    form.reset({
+      name: doctor?.name ?? "",
+      specialty: doctor?.specialty ?? "",
+      appointmentPriceInCents: doctor?.appointmentPriceInCents
+        ? doctor.appointmentPriceInCents / 100
+        : 0,
+      availableFromWeekDay: doctor?.availableFromWeekDay?.toString() ?? "1",
+      availableToWeekDay: doctor?.availableToWeekDay?.toString() ?? "5",
+      availableFromTime: doctor?.availableFromTime ?? "",
+      availableToTime: doctor?.availableToTime ?? "",
+    });
+  }, [form, onSuccess, doctor])
+
   async function onSubmit(data: FormDataDoctor) {
     execute({
       ...data,
       id: doctor?.id,
       availableFromWeekDay: parseInt(data.availableFromWeekDay),
       availableToWeekDay: parseInt(data.availableToWeekDay),
-      appointmentPrice: data.appointmentPrice * 100
+      appointmentPriceInCents: Math.round(data.appointmentPriceInCents * 100)
     })
   }
 
@@ -154,7 +169,7 @@ export function FormUpSertDoctor({ onSuccess, doctor }: FormUpSertDoctorProps) {
 
           <FormField
             control={form.control}
-            name="appointmentPrice"
+            name="appointmentPriceInCents"
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel>Preço da consulta:</FormLabel>

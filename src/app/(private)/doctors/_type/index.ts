@@ -8,7 +8,7 @@ export const schemaDoctor = z
     specialty: z.string().trim().min(1, {
       message: 'Campo Obrigatório'
     }),
-    appointmentPrice: z.number().min(1, {
+    appointmentPriceInCents: z.number().min(1, {
       message: 'Campo obrigatório'
     }),
     availableFromWeekDay: z.string(),
