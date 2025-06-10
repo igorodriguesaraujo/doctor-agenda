@@ -65,7 +65,9 @@ export function FormUpsertPatient({ onSuccess, patient }: FormUpsertPatientProps
 
   const { execute, isPending } = useAction(upsertPatientAction, {
     onSuccess: () => {
-      toast.success('Paciente criado com sucesso!');
+      toast.success(patient
+        ? 'Paciente atualizado com sucesso!'
+        : 'Paciente criado com sucesso!');
       onSuccess?.();
     },
     onError: (error) => {
@@ -76,7 +78,7 @@ export function FormUpsertPatient({ onSuccess, patient }: FormUpsertPatientProps
   async function onSubmit(data: UpsertPatientSchema) {
     execute({
       ...data,
-      phone: patient?.phoneNumber ?? '',
+      phone: data.phoneNumber,
       id: patient?.id
     });
   }
@@ -143,7 +145,7 @@ export function FormUpsertPatient({ onSuccess, patient }: FormUpsertPatientProps
                   <FormControl className="flex flex-col gap-3">
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value?.toString()}>
+                      value={field.value}>
                       <SelectTrigger className="w-full min-h-12">
                         <SelectValue placeholder="Selecione o sexo" />
                       </SelectTrigger>
